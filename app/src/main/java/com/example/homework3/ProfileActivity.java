@@ -71,9 +71,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         showNotification("Welcome " + userModel.Name, "You are on board!");
 
-        buttonEdit.setOnClickListener(v -> {
-            Toast.makeText(this, "This feature will be available soon!", Toast.LENGTH_SHORT).show();
-        });
+        buttonEdit.setOnClickListener(v -> Toast.makeText(this, "This feature will be available soon!", Toast.LENGTH_SHORT).show());
     }
 
     @Override

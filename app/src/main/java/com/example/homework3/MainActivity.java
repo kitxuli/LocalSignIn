@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -48,9 +47,9 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import Common.GlobalVariables;
+import Db.Db;
 import models.UserModel;
 import utility.BitmapUtility;
-import Db.Db;
 
 public class MainActivity extends AppCompatActivity {
 
