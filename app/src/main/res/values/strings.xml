@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">HomeWork3</string>
+    <string name="ProfileAvatar">Profile avatar</string>
+    <string name="Name">Name</string>
+    <string name="DateOfBirth">Date of birth</string>
+    <string name="BloodGroup">Blood group</string>
+    <string name="BloodGroupA">A</string>
+    <string name="BloodGroupB">B</string>
+    <string name="BloodGroupAB">C</string>
+    <string name="BloodGroupO">O</string>
+    <string name="Qualification">Qualification</string>
+    <string name="IAgree">I Agree</string>
+    <string name="Save">Save</string>
+    <string name="About">About</string>
+    <string name="NotificationSMS">Notification and SMS</string>
+    <string name="Coordinates">Coordinates</string>
+    <string name="PhoneNumber">Phone number</string>
+    <string name="Show">Show</string>
+</resources>
