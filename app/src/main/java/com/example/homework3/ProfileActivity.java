@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 
@@ -59,18 +60,29 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
-        textViewGreeting.setText("Welcome" + userModel.Name);
+        textViewGreeting.setText("Welcome " + userModel.Name);
         textViewPhoneNumber.setText(userModel.PhoneNumber);
         textViewDateOfBirth.setText(userModel.DateOfBirth);
         textViewBloodGroup.setText(userModel.BloodGroup);
         textViewQualification.setText(userModel.Qualification);
         textViewCoordinates.setText(userModel.Coordinates);
 
-        showNotification("Welcome" + userModel.Name, "You are on board!");
+        showNotification("Welcome " + userModel.Name, "You are on board!");
 
         buttonEdit.setOnClickListener(v -> {
             Toast.makeText(this, "This feature will be available soon!", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.profilemenu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void onClickSingOut(MenuItem item) {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
     }
 
     private void showNotification(String title, String text) {

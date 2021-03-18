@@ -168,7 +168,7 @@ public class MainActivity extends AppCompatActivity {
             long result = db.CreateUser(userModel);
 
             if (result == -1) {
-                AlertWarning(getString(R.string.GeneralError));
+                AlertWarning(getString(R.string.GeneralError) + "MainActivity");
                 return;
             }
 

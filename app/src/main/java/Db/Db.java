@@ -38,7 +38,7 @@ public class Db extends SQLiteOpenHelper {
                 + ColumnDateOfBirth + " TEXT,"
                 + ColumnBloodGroup + " TEXT,"
                 + ColumnQualification + " TEXT,"
-                + ColumnCoordinates + "TEXT,"
+                + ColumnCoordinates + " TEXT,"
                 + ColumnAvatar + " BLOB)";
         db.execSQL(createTableQuery);
     }
