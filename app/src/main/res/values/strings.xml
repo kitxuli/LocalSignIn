@@ -16,4 +16,9 @@
     <string name="Coordinates">Coordinates</string>
     <string name="PhoneNumber">Phone number</string>
     <string name="Show">Show</string>
+    <string name="Password">Password</string>
+    <string name="SignUp">Sign up</string>
+    <string name="ConfirmPassword">Confirm password</string>
+    <string name="Edit">Edit</string>
+    <string name="GeneralError">Something went wrong! Try again or contact us!</string>
 </resources>

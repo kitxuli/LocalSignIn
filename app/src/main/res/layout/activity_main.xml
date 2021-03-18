@@ -52,25 +52,7 @@
             app:cardBackgroundColor="#F3F3F3">
 
             <EditText
-                android:id="@+id/editTextName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:autofillHints=""
-                android:background="@null"
-                android:ems="10"
-                android:hint="@string/Name"
-                android:inputType="textPersonName"
-                android:padding="10dp" />
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="20dp"
-            app:cardBackgroundColor="#F3F3F3">
-
-            <EditText
-                android:id="@+id/editPhoneNumberNumber"
+                android:id="@+id/editTextPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autofillHints=""
@@ -81,6 +63,60 @@
                 android:padding="10dp" />
         </androidx.cardview.widget.CardView>
 
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#F3F3F3">
+
+            <EditText
+                android:id="@+id/editTextPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/Password"
+                android:inputType="numberPassword"
+                android:padding="10dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#F3F3F3">
+
+            <EditText
+                android:id="@+id/editTextConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/ConfirmPassword"
+                android:inputType="numberPassword"
+                android:padding="10dp" />
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="20dp"
+            app:cardBackgroundColor="#F3F3F3">
+
+            <EditText
+                android:id="@+id/editTextName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autofillHints=""
+                android:background="@null"
+                android:ems="10"
+                android:hint="@string/Name"
+                android:inputType="textPersonName"
+                android:padding="10dp" />
+        </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
@@ -212,32 +248,15 @@
                 android:text="@string/IAgree" />
         </androidx.cardview.widget.CardView>
 
-        <RelativeLayout
-            android:layout_width="fill_parent"
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/buttonSave"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            android:orientation="horizontal">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonShow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:background="#D1D1D1"
-                android:padding="10dp"
-                android:text="@string/Show"
-                android:textAllCaps="false" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/buttonSave"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="#D1D1D1"
-                android:padding="10dp"
-                android:text="@string/Save"
-                android:textAllCaps="false"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+            android:background="#D1D1D1"
+            android:padding="10dp"
+            android:text="@string/Save"
+            android:textAllCaps="false"
+            android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
 </ScrollView>

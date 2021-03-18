@@ -1,82 +1,79 @@
 package com.example.homework3;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-
-import android.Manifest;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+
+import Common.GlobalVariables;
+import Db.Db;
+import models.UserModel;
 
 public class ProfileActivity extends AppCompatActivity {
 
-    ListView listViewProfile;
-    Button buttonBack;
+    ImageView imageViewProfileAvatar;
+
+    TextView textViewGreeting, textViewPhoneNumber, textViewDateOfBirth, textViewBloodGroup, textViewQualification, textViewCoordinates;
+
+    Button buttonEdit;
 
     SharedPreferences sharedPreferences;
+
+    Db db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
-        listViewProfile = findViewById(R.id.listViewProfile);
-        buttonBack = findViewById(R.id.buttonBack);
+        imageViewProfileAvatar = findViewById(R.id.imageViewProfileAvatar);
 
-        sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE);
+        textViewGreeting = findViewById(R.id.textViewGreeting);
+        textViewPhoneNumber = findViewById(R.id.textViewPhoneNumber);
+        textViewDateOfBirth = findViewById(R.id.textViewDateOfBirth);
+        textViewBloodGroup = findViewById(R.id.textViewBloodGroup);
+        textViewQualification = findViewById(R.id.textViewQualification);
+        textViewCoordinates = findViewById(R.id.textViewCoordinates);
 
-        listViewProfile.setAdapter(new ArrayAdapter(ProfileActivity.this, android.R.layout.simple_list_item_1, getIntent().getStringArrayListExtra("profileInfo")));
+        buttonEdit = findViewById(R.id.buttonEdit);
 
-        listViewProfile.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (listViewProfile.getItemAtPosition(position).toString().contains("Phone Number")) {
+        sharedPreferences = getSharedPreferences(GlobalVariables.SharedPreferencesName, MODE_PRIVATE);
 
-                    if (ActivityCompat.checkSelfPermission(ProfileActivity.this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED){
-                        showPermissionAlert();
-                        return;
-                    }
+        db = new Db(this);
 
-                    showNotification("Phone number clicked");
-                    sendSms("Phone number clicked", sharedPreferences.getString("phoneNumber", "123").toString());
-                }
-            }
-        });
+        UserModel userModel = db.GetUser(sharedPreferences.getString(GlobalVariables.SharedPreferencesPhoneNumberKey, ""));
 
-        buttonBack.setOnClickListener(v -> {
-            startActivity(new Intent(this, MainActivity.class));
-        });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case 101: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                } else {
-                    // permission denied
-                }
-            }
+        if (userModel == null) {
+            Toast.makeText(this, R.string.GeneralError, Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        textViewGreeting.setText("Welcome" + userModel.Name);
+        textViewPhoneNumber.setText(userModel.PhoneNumber);
+        textViewDateOfBirth.setText(userModel.DateOfBirth);
+        textViewBloodGroup.setText(userModel.BloodGroup);
+        textViewQualification.setText(userModel.Qualification);
+        textViewCoordinates.setText(userModel.Coordinates);
+
+        showNotification("Welcome" + userModel.Name, "You are on board!");
+
+        buttonEdit.setOnClickListener(v -> {
+            Toast.makeText(this, "This feature will be available soon!", Toast.LENGTH_SHORT).show();
+        });
     }
 
-    private void showNotification(String text) {
+    private void showNotification(String title, String text) {
         NotificationManager notificationManager = (NotificationManager) ProfileActivity.this.getSystemService(ProfileActivity.NOTIFICATION_SERVICE);
 
         int notificationId = 1;
@@ -94,24 +91,12 @@ public class ProfileActivity extends AppCompatActivity {
 
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(ProfileActivity.this, channelId)
                 .setSmallIcon(android.R.drawable.ic_media_play)
-                .setContentTitle("ITM Reopened")
+                .setContentTitle(title)
                 .setContentText(text);
 
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(ProfileActivity.this, 0, intent, 0);
         mBuilder.setContentIntent(pendingIntent);
         notificationManager.notify(notificationId, mBuilder.build());
-    }
-
-    private void sendSms(String message, String phoneNumber) {
-        SmsManager smsManager = SmsManager.getDefault();
-        smsManager.sendTextMessage(message, null, phoneNumber, null, null);
-        Toast.makeText(ProfileActivity.this, "SMS Sent", Toast.LENGTH_SHORT).show();
-    }
-
-    private void showPermissionAlert() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, 101);
-        }
     }
 }

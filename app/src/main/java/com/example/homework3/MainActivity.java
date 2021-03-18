@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -46,8 +47,10 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
+import Common.GlobalVariables;
 import models.UserModel;
 import utility.BitmapUtility;
+import Db.Db;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,12 +62,14 @@ public class MainActivity extends AppCompatActivity {
     MediaPlayer mediaPlayer;
 
     ImageView imageViewProfileAvatar;
-    EditText editTextName, editPhoneNumberNumber, editTextDateOfBirth;
+    EditText editTextName, editTextPassword, editTextConfirmPassword, editTextPhoneNumber, editTextDateOfBirth;
     RadioGroup radioGroupBloodGroup;
     Spinner spinnerQualification;
     TextView textViewCoordinates;
     CheckBox checkBoxIAgree;
-    Button buttonShow, buttonSave;
+    Button buttonSave;
+
+    Db db;
 
     SharedPreferences sharedPreferences;
     SharedPreferences.Editor sharedPreferencesEditor;
@@ -84,25 +89,28 @@ public class MainActivity extends AppCompatActivity {
                 }
                 Location location = locationResult.getLastLocation();
                 textViewCoordinates.setText(location.getLatitude() + " - " + location.getLongitude());
-                //fusedLocationClient.removeLocationUpdates(new LocationCallback() {
-                //});
+                fusedLocationClient.removeLocationUpdates(new LocationCallback() {
+                });
             }
         };
 
         mediaPlayer = MediaPlayer.create(this, R.raw.doink);
 
         imageViewProfileAvatar = findViewById(R.id.imageViewProfileAvatar);
+        editTextPhoneNumber = findViewById(R.id.editTextPhoneNumber);
+        editTextPassword = findViewById(R.id.editTextPassword);
+        editTextConfirmPassword = findViewById(R.id.editTextConfirmPassword);
         editTextName = findViewById(R.id.editTextName);
-        editPhoneNumberNumber = findViewById(R.id.editPhoneNumberNumber);
         editTextDateOfBirth = findViewById(R.id.editTextDateOfBirth);
         radioGroupBloodGroup = findViewById(R.id.radioGroupBloodGroup);
         spinnerQualification = findViewById(R.id.spinnerQualification);
         textViewCoordinates = findViewById(R.id.textViewCoordinates);
         checkBoxIAgree = findViewById(R.id.checkBoxIAgree);
-        buttonShow = findViewById(R.id.buttonShow);
         buttonSave = findViewById(R.id.buttonSave);
 
-        sharedPreferences = getSharedPreferences("sharedPreferences", MODE_PRIVATE);
+        db = new Db(this);
+
+        sharedPreferences = getSharedPreferences(GlobalVariables.SharedPreferencesName, MODE_PRIVATE);
         sharedPreferencesEditor = sharedPreferences.edit();
 
         Seeder();
@@ -135,31 +143,37 @@ public class MainActivity extends AppCompatActivity {
 
         textViewCoordinates.setOnClickListener(v -> startLocationUpdates());
 
-        buttonShow.setOnClickListener(v -> {
-
-            UserModel userModel = GetUserData();
-            if (userModel == null) {
-                return;
-            }
-
-            Intent intent = new Intent(this, ProfileActivity.class);
-            intent.putStringArrayListExtra("profileInfo", new ArrayList<>(Arrays.asList(
-                    "Name: " + userModel.Name,
-                    "Phone Number: " + userModel.PhoneNumber,
-                    "Date of birth: " + userModel.DateOfBirth,
-                    "Blood group: " + userModel.BloodGroup,
-                    "Qualification: " + userModel.Qualification,
-                    "Coordinates: " + userModel.Coordinates)));
-
-            startActivity(intent);
-        });
-
         buttonSave.setOnClickListener(v -> {
 
             UserModel userModel = GetUserData();
             if (userModel == null) {
                 return;
             }
+
+            UserModel dbUserModel = db.GetUser(userModel.PhoneNumber);
+            if (dbUserModel != null) {
+                AlertWarning("PhoneNumber is already used!");
+                return;
+            }
+
+            String confirmPassword = editTextConfirmPassword.getText().toString();
+            if (confirmPassword == null || !confirmPassword.equals(userModel.Password)) {
+                AlertWarning("Passwords don't match!");
+                return;
+            }
+
+            sharedPreferencesEditor.putString(GlobalVariables.SharedPreferencesPhoneNumberKey, userModel.PhoneNumber);
+            sharedPreferencesEditor.apply();
+
+            long result = db.CreateUser(userModel);
+
+            if (result == -1) {
+                AlertWarning(getString(R.string.GeneralError));
+                return;
+            }
+
+            Intent intent = new Intent(this, ProfileActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -231,14 +245,17 @@ public class MainActivity extends AppCompatActivity {
                 return null;
             }
 
-            String phoneNumber = editPhoneNumberNumber.getText().toString();
+            String phoneNumber = editTextPhoneNumber.getText().toString();
             if (phoneNumber == null || phoneNumber.isEmpty()) {
                 AlertWarning("Please fill phoneNumber");
                 return null;
             }
 
-            sharedPreferencesEditor.putString("phoneNumber", phoneNumber);
-            sharedPreferencesEditor.apply();
+            String password = editTextPassword.getText().toString();
+            if (password == null || password.isEmpty()) {
+                AlertWarning("Please fill password");
+                return null;
+            }
 
             String dateOfBirth = editTextDateOfBirth.getText().toString();
             if (dateOfBirth == null || dateOfBirth.isEmpty()) {
@@ -265,11 +282,12 @@ public class MainActivity extends AppCompatActivity {
                 {
                     PhoneNumber = phoneNumber;
                     Name = name;
+                    Password = password;
                     DateOfBirth = dateOfBirth;
                     BloodGroup = bloodGroup;
                     Qualification = qualification;
                     Coordinates = coordinates;
-                    Avatar = BitmapUtility.getBytes(((BitmapDrawable)imageViewProfileAvatar.getDrawable()).getBitmap());
+                    Avatar = BitmapUtility.getBytes(((BitmapDrawable) imageViewProfileAvatar.getDrawable()).getBitmap());
                 }
             };
 

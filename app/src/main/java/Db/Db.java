@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import Common.GlobalVariables;
 import models.UserModel;
 
 public class Db extends SQLiteOpenHelper {
@@ -24,7 +25,7 @@ public class Db extends SQLiteOpenHelper {
     SQLiteDatabase sqLiteDatabase;
 
     public Db(Context context) {
-        super(context, "MyDB.db", null, 1);
+        super(context, GlobalVariables.DataBaseName, null, 1);
         sqLiteDatabase = getWritableDatabase();
     }
 
@@ -38,7 +39,7 @@ public class Db extends SQLiteOpenHelper {
                 + ColumnBloodGroup + " TEXT,"
                 + ColumnQualification + " TEXT,"
                 + ColumnCoordinates + "TEXT,"
-                + ColumnAvatar +" BLOB)";
+                + ColumnAvatar + " BLOB)";
         db.execSQL(createTableQuery);
     }
 
@@ -70,7 +71,7 @@ public class Db extends SQLiteOpenHelper {
 
         cursor.moveToFirst();
 
-        return new UserModel(){
+        UserModel userModel = new UserModel() {
             {
                 PhoneNumber = cursor.getString(cursor.getColumnIndex(ColumnPhoneNumber));
                 Password = cursor.getString(cursor.getColumnIndex(ColumnPassword));
@@ -82,5 +83,9 @@ public class Db extends SQLiteOpenHelper {
                 Avatar = cursor.getBlob(cursor.getColumnIndex(ColumnAvatar));
             }
         };
+
+        cursor.close();
+
+        return userModel;
     }
 }
