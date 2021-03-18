@@ -20,6 +20,7 @@ import androidx.core.app.NotificationCompat;
 import Common.GlobalVariables;
 import Db.Db;
 import models.UserModel;
+import utility.BitmapUtility;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -60,6 +61,7 @@ public class ProfileActivity extends AppCompatActivity {
             return;
         }
 
+        imageViewProfileAvatar.setImageBitmap(BitmapUtility.getImage(userModel.Avatar));
         textViewGreeting.setText("Welcome " + userModel.Name);
         textViewPhoneNumber.setText(userModel.PhoneNumber);
         textViewDateOfBirth.setText(userModel.DateOfBirth);

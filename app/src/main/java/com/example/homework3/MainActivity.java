@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
 
             UserModel dbUserModel = db.GetUser(userModel.PhoneNumber);
             if (dbUserModel != null) {
-                AlertWarning("PhoneNumber is already used!");
+                AlertWarning("Phone number is already used!");
                 return;
             }
 
